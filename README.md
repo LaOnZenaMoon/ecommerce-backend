@@ -19,9 +19,9 @@
 ### payment-service 
 * A service for paying for products
 
-## skills
+## Skills
 * Java 11
-* Spring Boot 2.6x
+* Spring Boot 2.5.x
 * Spring Boot Actuator
 * Spring Cloud
   * Spring Cloud Netflix Eureka
