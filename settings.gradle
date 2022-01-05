@@ -1,5 +1,6 @@
 include 'core'
 include 'domain'
+include 'auth-service'
 include 'order-service'
 include 'product-service'
 include 'payment-service'

@@ -1,0 +1,26 @@
+dependencies {
+    implementation project(':core')
+    implementation project(':domain')
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    implementation 'org.springframework.boot:spring-boot-starter-security:'
+
+    // Runtime H2
+    runtimeOnly 'com.h2database:h2'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // JWT
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
+    // Spring Cloud Config
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
+
+    // Spring Cloud Config > hot-deploy
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // Feign Client
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+}

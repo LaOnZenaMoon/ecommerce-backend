@@ -10,6 +10,9 @@
 ### domain
 * Common entities
 
+### auth-service
+* A service for user authentication and authorization 
+
 ### product-service
 * A service for product management
 
