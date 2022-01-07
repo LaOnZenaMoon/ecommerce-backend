@@ -1,0 +1,87 @@
+### gateway-service > config-service > 속성 변경 반영
+POST {{host}}/actuator/refresh
+
+> {%
+client.log(response.body);
+%}
+
+### auth-service > config-service > 속성 변경 반영
+POST {{host}}/auth-service/actuator/refresh
+
+> {%
+client.log(response.body);
+%}
+
+### auth-service > 사용자 추가 이전 > 사용자 로그인
+POST {{host}}/auth-service/login
+Content-Type: application/json
+
+{
+  "email": "laonzenamoon@gmail.com",
+  "password": "asdf1234"
+}
+
+> {%
+client.test("Request executed unauthorized", function() {
+  client.assert(response.status == 401, "Response status is not 401");
+});
+client.global.set("jwt", response.headers.valueOf("token"));
+client.log(response.headers.valueOf("token"));
+client.global.set("userId", response.headers.valueOf("userId"));
+client.log(response.headers.valueOf("userId"));
+%}
+
+### auth-service > 사용자 추가
+POST {{host}}/auth-service/users
+Content-Type: application/json
+
+{
+  "email": "laonzenamoon@gmail.com",
+  "name": "JUN LEE",
+  "password": "asdf1234"
+}
+
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status == 201, "Response status is not 201");
+});
+%}
+
+### auth-service > 사용자 추가 이후 > 사용자 로그인
+POST {{host}}/auth-service/login
+Content-Type: application/json
+
+{
+  "email": "laonzenamoon@gmail.com",
+  "password": "asdf1234"
+}
+
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status == 200, "Response status is not 200");
+});
+client.global.set("jwt", response.headers.valueOf("token"));
+client.log(response.headers.valueOf("token"));
+client.global.set("userId", response.headers.valueOf("userId"));
+client.log(response.headers.valueOf("userId"));
+%}
+
+### auth-service > 사용자 상세 조회
+GET {{host}}/auth-service/users/{{userId}}
+Authorization: Bearer {{jwt}}
+
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status == 200, "Response status is not 200");
+});
+%}
+
+### auth-service > 사용자 목록 조회
+GET {{host}}/auth-service/users
+Authorization: Bearer {{jwt}}
+
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status == 200, "Response status is not 200");
+});
+%}
