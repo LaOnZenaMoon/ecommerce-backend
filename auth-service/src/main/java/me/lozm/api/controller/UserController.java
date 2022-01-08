@@ -30,7 +30,7 @@ public class UserController {
         List<UserInfoVo> userList = userService.getUserList();
 
         List<UserInfoResponseDto> responseList = userList.stream()
-                .map(userInfoVo -> mapStrictly(userInfoVo, UserInfoResponseDto.class))
+                .map(vo -> mapStrictly(vo, UserInfoResponseDto.class))
                 .collect(toList());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(responseList);

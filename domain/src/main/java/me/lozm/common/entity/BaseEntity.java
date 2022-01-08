@@ -22,4 +22,7 @@ public abstract class BaseEntity extends BaseDateTimeEntity {
     @Column(name = "LAST_MODIFIED_BY")
     private Long lastModifiedBy;
 
+    @Column(name = "USE")
+    private Boolean use;
+
 }

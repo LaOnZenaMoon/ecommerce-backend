@@ -7,5 +7,6 @@ public abstract class BaseVo extends BaseDateTimeVo {
 
     private Long createdBy;
     private Long lastModifiedBy;
+    private Boolean use;
 
 }
