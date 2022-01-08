@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import me.lozm.common.entity.BaseEntity;
 
 import javax.persistence.*;
 
@@ -13,22 +14,20 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "USERS")
-public class User {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "USER_ID")
     private Long id;
 
-    @Column(nullable = false, length = 50, unique = true)
+    @Column(name = "EMAIL", nullable = false, length = 50, unique = true)
     private String email;
 
-    @Column(nullable = false, length = 50)
+    @Column(name = "NAME", nullable = false, length = 50)
     private String name;
 
-    @Column(nullable = false, unique = true)
-    private String userId;
-
-    @Column(nullable = false, unique = true)
+    @Column(name = "PASSWORD", nullable = false, unique = true)
     private String encryptedPassword;
 
 

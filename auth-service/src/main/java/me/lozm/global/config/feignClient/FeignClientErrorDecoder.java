@@ -1,10 +1,8 @@
-package me.lozm.global.security.feignClient;
+package me.lozm.global.config.feignClient;
 
 import feign.Response;
 import feign.codec.ErrorDecoder;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.server.ResponseStatusException;
 
 @Component
 public class FeignClientErrorDecoder implements ErrorDecoder {

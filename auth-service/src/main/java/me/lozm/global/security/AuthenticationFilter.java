@@ -64,13 +64,13 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         UserInfoVo userInfoVo = userService.findByEmail(email);
 
         String token = Jwts.builder()
-                .setSubject(userInfoVo.getUserId())
+                .setSubject(userInfoVo.getId().toString())
                 .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(environment.getProperty("jwt-token.expiration-time"))))
                 .signWith(SignatureAlgorithm.HS512, environment.getProperty("jwt-token.secret-key"))
                 .compact();
 
         response.addHeader("token", token);
-        response.addHeader("userId", userInfoVo.getUserId());
+        response.addHeader("userId", userInfoVo.getId().toString());
     }
 
     @Override

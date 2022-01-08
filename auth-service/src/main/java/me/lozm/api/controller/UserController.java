@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @GetMapping("{userId}")
-    public ResponseEntity<UserInfoResponseDto> getUserDetail(@PathVariable("userId") String userId) {
+    public ResponseEntity<UserInfoResponseDto> getUserDetail(@PathVariable("userId") Long userId) {
         UserInfoVo userInfoVo = userService.getUserDetail(userId);
 
         UserInfoResponseDto userInfoResponseDto = mapStrictly(userInfoVo, UserInfoResponseDto.class);

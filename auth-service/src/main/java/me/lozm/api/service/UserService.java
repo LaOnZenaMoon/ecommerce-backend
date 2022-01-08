@@ -10,9 +10,9 @@ public interface UserService extends UserDetailsService {
 
     UserCreateVo createUser(UserCreateVo userCreateVo);
 
-    UserInfoVo getUserDetail(String userId);
-
     List<UserInfoVo> getUserList();
+
+    UserInfoVo getUserDetail(Long userId);
 
     UserInfoVo findByEmail(String email);
 

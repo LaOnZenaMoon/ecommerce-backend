@@ -2,16 +2,17 @@ package me.lozm.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
+import me.lozm.common.dto.BaseDto;
 
 import java.util.List;
 
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserInfoResponseDto {
+public class UserInfoResponseDto extends BaseDto {
 
+    private String id;
     private String email;
     private String name;
-    private String userId;
     private List<OrderInfoResponseDto> orders;
 
 }
