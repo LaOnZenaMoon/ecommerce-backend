@@ -5,4 +5,34 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'jakarta.validation:jakarta.validation-api'
     implementation 'com.fasterxml.jackson.core:jackson-annotations'
+
+    // QueryDSL
+    implementation 'com.querydsl:querydsl-jpa'
+    implementation 'com.querydsl:querydsl-apt'
+
+    // JPA Logging
+    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.7.1'
 }
+
+// QueryDSL - start
+apply plugin: "com.ewerk.gradle.plugins.querydsl"
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+    library = "com.querydsl:querydsl-apt"
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+    main.java.srcDir querydslDir
+}
+
+compileQuerydsl{
+    options.annotationProcessorPath = configurations.querydsl
+}
+
+configurations {
+    querydsl.extendsFrom compileClasspath
+}
+// QueryDSL - end
