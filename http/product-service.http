@@ -5,8 +5,8 @@ POST {{host}}/actuator/refresh
 client.log(response.body);
 %}
 
-### auth-service > config-service > 속성 변경 반영
-POST {{host}}/auth-service/actuator/refresh
+### product-service > config-service > 속성 변경 반영
+POST {{host}}/product-service/actuator/refresh
 
 > {%
 client.log(response.body);
