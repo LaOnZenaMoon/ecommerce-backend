@@ -1,9 +1,11 @@
 package me.lozm.global.config;
 
 import io.jsonwebtoken.Jwt;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.lozm.code.AuditorCode;
+import me.lozm.utils.JwtUtils;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.http.HttpHeaders;
@@ -39,7 +41,7 @@ public class AuditorConfig implements AuditorAware<Long> {
 
     private Jwt getJwt(ServletRequestAttributes requestAttributes) {
         try {
-            String jwt = requestAttributes.getRequest().getHeader(HttpHeaders.AUTHORIZATION).replace("Bearer", "");
+            String jwt = requestAttributes.getRequest().getHeader(HttpHeaders.AUTHORIZATION);
             return getJwtObject(jwt, environment.getProperty("jwt-token.secret-key"));
         } catch (RuntimeException e) {
             log.error(e.getMessage());
