@@ -11,11 +11,11 @@ public class UserCreateRequestDto {
 
     @Email
     @NotNull(message = "Email cannot be null")
-    @Size(min = 2, message = "Email not be less than 2 characters")
+    @Size(min = 2, message = "Email cannot be less than 2 characters")
     private String email;
 
     @NotNull(message = "Name cannot be null")
-    @Size(min = 2, message = "Name not be less than 2 characters")
+    @Size(min = 2, message = "Name cannot be less than 2 characters")
     private String name;
 
     @NotNull(message = "Password cannot be null")

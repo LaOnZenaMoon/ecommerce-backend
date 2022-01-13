@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class ProductCreateRequestDto {
 
     @NotNull(message = "Name cannot be null")
-    @Size(min = 2, message = "Name not be less than 2 characters")
+    @Size(min = 2, message = "Name cannot be less than 2 characters")
     private String name;
 
     @NotNull(message = "Quantity cannot be null")

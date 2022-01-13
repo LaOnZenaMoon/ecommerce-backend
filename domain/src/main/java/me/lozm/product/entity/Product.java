@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.lozm.common.entity.BaseEntity;
+import org.springframework.util.Assert;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -37,5 +38,19 @@ public class Product extends BaseEntity {
 
     @Column(name = "SALES_END_DATE")
     private LocalDateTime salesEndDateTime;
+
+
+    public boolean canBeOrdered(Integer quantity) {
+        Assert.notNull(quantity, "quantity cannot be null");
+        Assert.isTrue(quantity > 0, "quantity cannot be less than 1");
+
+        return this.quantity - quantity >= 0;
+    }
+
+    public void updateQuantity(Integer quantity) {
+        Assert.notNull(quantity, "quantity cannot be null");
+
+        this.quantity += quantity;
+    }
 
 }
