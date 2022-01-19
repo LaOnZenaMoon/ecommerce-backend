@@ -18,6 +18,8 @@
 
 ### order-service
 * A service for ordering products
+* If you want to test [order-service], need to run on [dev] profiles.
+  * Run MySQL, using the [docker-compose.yml] file.
 
 ### payment-service 
 * A service for paying for products
@@ -40,3 +42,5 @@
 * Messaging service
   * [Kafka](https://github.com/wurstmeister/kafka-docker)
 * Docker
+  * docker-compose
+* MySQL
