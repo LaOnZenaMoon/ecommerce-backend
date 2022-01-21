@@ -2,12 +2,16 @@ package me.lozm.api.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.lozm.common.vo.PageVo;
+import me.lozm.common.vo.SearchVo;
 import me.lozm.user.entity.User;
 import me.lozm.user.repository.UserRepository;
 import me.lozm.user.service.UserHelperService;
 import me.lozm.user.vo.OrderInfoVo;
 import me.lozm.user.vo.UserCreateVo;
 import me.lozm.user.vo.UserInfoVo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -31,11 +35,10 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public List<UserInfoVo> getUserList() {
-        return userRepository.findAll()
-                .stream()
-                .map(user -> mapStrictly(user, UserInfoVo.class))
-                .collect(toList());
+    public Page<UserInfoVo> getUserList(PageVo pageVo, SearchVo searchVo) {
+        List<UserInfoVo> userList = userRepository.getUserList(pageVo, searchVo);
+        long totalCount = userRepository.getUserTotalCount(pageVo, searchVo);
+        return new PageImpl<>(userList, pageVo.getPageRequest(), totalCount);
     }
 
     @Override
