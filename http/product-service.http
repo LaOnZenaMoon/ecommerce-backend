@@ -99,7 +99,7 @@ client.test("Request executed successfully", function() {
 %}
 
 ### product-service > 상품 목록 조회
-GET {{host}}/product-service/products
+GET {{host}}/product-service/products?pageNumber=0&pageSize=50
 
 > {%
 client.test("Request executed successfully", function() {
