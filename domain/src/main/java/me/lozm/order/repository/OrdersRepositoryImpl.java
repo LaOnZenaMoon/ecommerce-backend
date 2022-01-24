@@ -3,8 +3,9 @@ package me.lozm.order.repository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import me.lozm.common.vo.PageVo;
+import me.lozm.common.vo.SearchVo;
 import me.lozm.order.vo.OrdersInfoVo;
-import me.lozm.order.vo.OrdersSearchVo;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class OrdersRepositoryImpl implements OrdersRepositoryCustom {
 
 
     @Override
-    public List<OrdersInfoVo> getOrderList(OrdersSearchVo searchVo) {
+    public List<OrdersInfoVo> getOrdersList(PageVo pageVo, SearchVo searchVo) {
         return jpaQueryFactory
                 .select(Projections.fields(
                         OrdersInfoVo.class,
@@ -46,7 +47,24 @@ public class OrdersRepositoryImpl implements OrdersRepositoryCustom {
                 .innerJoin(user).on(user.id.eq(userOrders.user.id))
                 .innerJoin(productOrders).on(productOrders.orders.id.eq(orders.id))
                 .innerJoin(product).on(product.id.eq(productOrders.product.id))
+                .orderBy(orders.id.desc())
+                .offset(pageVo.getPageRequest().getOffset())
+                .limit(pageVo.getPageRequest().getPageSize())
                 .fetch();
+    }
+
+    @Override
+    public long getUserTotalCount(PageVo pageVo, SearchVo searchVo) {
+        return jpaQueryFactory
+                .selectFrom(orders)
+                .innerJoin(userOrders).on(userOrders.orders.id.eq(orders.id))
+                .innerJoin(user).on(user.id.eq(userOrders.user.id))
+                .innerJoin(productOrders).on(productOrders.orders.id.eq(orders.id))
+                .innerJoin(product).on(product.id.eq(productOrders.product.id))
+                .orderBy(orders.id.desc())
+                .offset(pageVo.getPageRequest().getOffset())
+                .limit(pageVo.getPageRequest().getPageSize())
+                .fetchCount();
     }
 
 }

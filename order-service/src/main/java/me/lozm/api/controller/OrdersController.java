@@ -3,6 +3,10 @@ package me.lozm.api.controller;
 import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
 import me.lozm.api.service.OrdersService;
+import me.lozm.common.dto.PageDto;
+import me.lozm.common.dto.SearchDto;
+import me.lozm.common.vo.PageVo;
+import me.lozm.common.vo.SearchVo;
 import me.lozm.order.dto.OrdersCreateRequestDto;
 import me.lozm.order.dto.OrdersCreateResponseDto;
 import me.lozm.order.dto.OrdersInfoResponseDto;
@@ -10,7 +14,10 @@ import me.lozm.order.vo.OrdersCreateRequestVo;
 import me.lozm.order.vo.OrdersCreateResponseVo;
 import me.lozm.order.vo.OrdersInfoVo;
 import me.lozm.order.vo.OrdersSearchVo;
+import me.lozm.user.dto.UserInfoResponseDto;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -33,14 +40,19 @@ public class OrdersController {
 
 
     @GetMapping
-    public ResponseEntity<List<OrdersInfoResponseDto>> getOrderList() {
-        //TODO 주문 목록 조회 조건 기능 개발
-        List<OrdersInfoVo> ordersList = ordersService.getOrdersList(new OrdersSearchVo());
-        List<OrdersInfoResponseDto> responseList = ordersList.stream()
+    public ResponseEntity<Page<OrdersInfoResponseDto>> getOrdersList(PageDto pageDto, SearchDto searchDto) {
+        final PageVo pageVo = mapStrictly(pageDto, PageVo.class);
+        final SearchVo searchVo = mapStrictly(searchDto, SearchVo.class);
+
+        Page<OrdersInfoVo> ordersPage = ordersService.getOrdersList(pageVo, searchVo);
+
+        List<OrdersInfoResponseDto> responseList = ordersPage.getContent()
+                .stream()
                 .map(vo -> mapStrictly(vo, OrdersInfoResponseDto.class))
                 .collect(toList());
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(responseList);
+                .body(new PageImpl<>(responseList, ordersPage.getPageable(), ordersPage.getTotalElements()));
     }
 
     @GetMapping("{ordersId}")

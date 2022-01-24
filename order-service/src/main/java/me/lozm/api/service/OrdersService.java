@@ -1,15 +1,15 @@
 package me.lozm.api.service;
 
+import me.lozm.common.vo.PageVo;
+import me.lozm.common.vo.SearchVo;
 import me.lozm.order.vo.OrdersCreateRequestVo;
 import me.lozm.order.vo.OrdersCreateResponseVo;
 import me.lozm.order.vo.OrdersInfoVo;
-import me.lozm.order.vo.OrdersSearchVo;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 public interface OrdersService {
 
-    List<OrdersInfoVo> getOrdersList(OrdersSearchVo searchVo);
+    Page<OrdersInfoVo> getOrdersList(PageVo pageVo, SearchVo searchVo);
 
     OrdersCreateResponseVo createOrders(OrdersCreateRequestVo ordersCreateRequestVo);
 
