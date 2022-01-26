@@ -119,7 +119,7 @@ client.test("Request executed successfully", function() {
 %}
 
 ### order-service > 주문 목록 조회
-GET {{host}}/order-service/orders
+GET {{host}}/order-service/orders?pageNumber=0&pageSize=50
 Authorization: Bearer {{jwt}}
 
 > {%
