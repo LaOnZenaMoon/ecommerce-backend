@@ -31,4 +31,7 @@ dependencies {
 
     // MySQL
     implementation 'mysql:mysql-connector-java'
+
+    // Spring Kafka
+    implementation 'org.springframework.kafka:spring-kafka'
 }

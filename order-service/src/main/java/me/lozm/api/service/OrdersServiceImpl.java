@@ -54,6 +54,9 @@ public class OrdersServiceImpl implements OrdersService {
 
         User user = userHelperService.getUser(ordersCreateRequestVo.getUserId());
 
+        //TODO order-service & product-service 모듈 조회 및 업데이트 기능에 Kafka 적용
+        // 1. 상품 조회
+        // 2. 상품 업데이트
         Product product = productHelperService.getProduct(orderedProductId);
         if (!product.canBeOrdered(orderedQuantity)) {
             throw new IllegalArgumentException(
