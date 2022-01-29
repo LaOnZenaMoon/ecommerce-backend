@@ -17,6 +17,12 @@ spring:
         jdbc:
           batch_size: 100
           order_inserts: true
+  kafka:
+    consumer:
+      group-id: consumerGroupId
+      key-deserializer: StringDeserializer
+      value-deserializer: StringDeserializer
+    bootstrap-servers: 127.0.0.1:9092
 
 eureka:
   instance:
