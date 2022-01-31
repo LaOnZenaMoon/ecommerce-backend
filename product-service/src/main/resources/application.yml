@@ -20,8 +20,8 @@ spring:
   kafka:
     consumer:
       group-id: consumerGroupId
-      key-deserializer: StringDeserializer
-      value-deserializer: StringDeserializer
+#      key-deserializer: StringDeserializer.class
+#      value-deserializer: StringDeserializer.class
     bootstrap-servers: 127.0.0.1:9092
 
 eureka:

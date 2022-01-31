@@ -18,9 +18,9 @@ spring:
           batch_size: 100
           order_inserts: true
   kafka:
-    producer:
-      key-deserializer: StringSerializer
-      value-deserializer: StringSerializer
+#    producer:
+#      key-deserializer: StringSerializer.class
+#      value-deserializer: StringSerializer.class
     bootstrap-servers: 127.0.0.1:9092
 
 eureka:
