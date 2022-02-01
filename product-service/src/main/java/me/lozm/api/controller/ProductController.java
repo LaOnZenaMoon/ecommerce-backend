@@ -6,12 +6,10 @@ import me.lozm.common.dto.PageDto;
 import me.lozm.common.dto.SearchDto;
 import me.lozm.common.vo.PageVo;
 import me.lozm.common.vo.SearchVo;
-import me.lozm.product.dto.ProductCreateRequestDto;
-import me.lozm.product.dto.ProductCreateResponseDto;
-import me.lozm.product.dto.ProductInfoResponseDto;
+import me.lozm.product.dto.*;
 import me.lozm.product.vo.ProductCreateVo;
 import me.lozm.product.vo.ProductInfoVo;
-import me.lozm.user.dto.UserInfoResponseDto;
+import me.lozm.product.vo.ProductOrderVo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
@@ -20,7 +18,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static me.lozm.utils.MapperUtils.mapStrictly;
@@ -66,6 +63,16 @@ public class ProductController {
         ProductCreateResponseDto productCreateResponseDto = mapStrictly(responseProductCreateVo, ProductCreateResponseDto.class);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(productCreateResponseDto);
+    }
+
+    @PutMapping("orders")
+    public ResponseEntity<ProductOrderResponseDto> orderProduct(@RequestBody @Validated ProductOrderRequestDto requestDto) {
+        ProductOrderVo productOrderVo = mapStrictly(requestDto, ProductOrderVo.class);
+        ProductOrderVo responseProductOrderVo = productService.orderProduct(productOrderVo);
+
+        ProductOrderResponseDto productOrderResponseDto = mapStrictly(responseProductOrderVo, ProductOrderResponseDto.class);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(productOrderResponseDto);
     }
 
 }

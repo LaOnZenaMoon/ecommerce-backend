@@ -9,6 +9,7 @@ import me.lozm.product.repository.ProductRepository;
 import me.lozm.product.service.ProductHelperService;
 import me.lozm.product.vo.ProductCreateVo;
 import me.lozm.product.vo.ProductInfoVo;
+import me.lozm.product.vo.ProductOrderVo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
@@ -47,6 +48,24 @@ public class ProductServiceImpl implements ProductService {
         Product product = mapStrictly(productCreateVo, Product.class);
         Product savedProduct = productRepository.save(product);
         return mapStrictly(savedProduct, ProductCreateVo.class);
+    }
+
+    @Override
+    @Transactional
+    public ProductOrderVo orderProduct(ProductOrderVo productOrderVo) {
+        final Long orderedProductId = productOrderVo.getId();
+        final Integer orderedQuantity = productOrderVo.getQuantity();
+
+        Product product = productHelperService.getProduct(productOrderVo.getId());
+        if (!product.canBeOrdered(orderedQuantity)) {
+            throw new IllegalArgumentException(
+                    format("주문하신 상품 수량만큼 상품을 주문할 수 없습니다. 상품 ID: %s, 주문한 상품 수량: %d, 남은 상품 수량: %d",
+                            orderedProductId, orderedQuantity, product.getQuantity())
+            );
+        }
+        product.updateQuantity(-orderedQuantity);
+
+        return mapStrictly(product, ProductOrderVo.class);
     }
 
 }
