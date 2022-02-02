@@ -5,7 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.lozm.order.entity.Orders;
 import me.lozm.order.entity.ProductOrders;
-import me.lozm.order.entity.UserOrders;
+import me.lozm.product.dto.ProductOrderResponseDto;
+import me.lozm.user.dto.UserInfoResponseDto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -32,13 +33,13 @@ public class OrdersCreateResponseVo {
     private String userName;
 
 
-    public OrdersCreateResponseVo(Orders orders, ProductOrders productOrders, UserOrders userOrders) {
+    public OrdersCreateResponseVo(Orders orders, ProductOrders productOrders, UserInfoResponseDto userInfoResponseDto, ProductOrderResponseDto orderedProduct) {
         productOrdersId = productOrders.getId();
         productOrdersQuantity = productOrders.getQuantity();
         productOrdersPrice = productOrders.getPrice();
 
-        productId = productOrders.getProduct().getId();
-        productName = productOrders.getProduct().getName();
+        productId = orderedProduct.getId();
+        productName = orderedProduct.getName();
 
         ordersId = orders.getId();
         ordersTotalPrice = orders.getTotalPrice();
@@ -47,8 +48,8 @@ public class OrdersCreateResponseVo {
         ordersLastModifiedBy = orders.getLastModifiedBy();
         ordersLastModifiedDateTime = orders.getLastModifiedDateTime();
 
-        userId = userOrders.getUser().getId();
-        userName = userOrders.getUser().getName();
+        userId = userInfoResponseDto.getId();
+        userName = userInfoResponseDto.getName();
     }
 
 }

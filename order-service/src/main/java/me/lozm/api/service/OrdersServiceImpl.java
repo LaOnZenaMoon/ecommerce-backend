@@ -2,6 +2,8 @@ package me.lozm.api.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.lozm.api.client.AuthServiceClient;
+import me.lozm.api.client.ProductServiceClient;
 import me.lozm.common.vo.PageVo;
 import me.lozm.common.vo.SearchVo;
 import me.lozm.order.entity.Orders;
@@ -13,12 +15,12 @@ import me.lozm.order.repository.UserOrdersRepository;
 import me.lozm.order.vo.OrdersCreateRequestVo;
 import me.lozm.order.vo.OrdersCreateResponseVo;
 import me.lozm.order.vo.OrdersInfoVo;
-import me.lozm.product.entity.Product;
-import me.lozm.product.service.ProductHelperService;
-import me.lozm.user.entity.User;
-import me.lozm.user.service.UserHelperService;
+import me.lozm.product.dto.ProductOrderRequestDto;
+import me.lozm.product.dto.ProductOrderResponseDto;
+import me.lozm.user.dto.UserInfoResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,8 +37,8 @@ public class OrdersServiceImpl implements OrdersService {
     private final OrdersRepository ordersRepository;
     private final ProductOrdersRepository productOrdersRepository;
     private final UserOrdersRepository userOrdersRepository;
-    private final UserHelperService userHelperService;
-    private final ProductHelperService productHelperService;
+    private final AuthServiceClient authServiceClient;
+    private final ProductServiceClient productServiceClient;
 
 
     @Override
@@ -51,33 +53,40 @@ public class OrdersServiceImpl implements OrdersService {
     public OrdersCreateResponseVo createOrders(OrdersCreateRequestVo ordersCreateRequestVo) {
         final Long orderedProductId = ordersCreateRequestVo.getProductId();
         final Integer orderedQuantity = ordersCreateRequestVo.getQuantity();
+        final Long userId = ordersCreateRequestVo.getUserId();
 
-        User user = userHelperService.getUser(ordersCreateRequestVo.getUserId());
+        ResponseEntity<UserInfoResponseDto> userDetailResponseEntity = authServiceClient.getUserDetail(userId);
+        if (!userDetailResponseEntity.getStatusCode().is2xxSuccessful()) {
+            throw new IllegalArgumentException(format("고객 정보 조회에 실패하였습니다.(Status code: %s) 고객 ID: %d",
+                    userDetailResponseEntity.getStatusCode(), userId));
+        }
+        UserInfoResponseDto userDetail = userDetailResponseEntity.getBody();
 
         //TODO order-service & product-service 모듈 조회 및 업데이트 기능에 Kafka 적용
         // 1. 상품 조회
         // 2. 상품 업데이트
-        Product product = productHelperService.getProduct(orderedProductId);
-        if (!product.canBeOrdered(orderedQuantity)) {
-            throw new IllegalArgumentException(
-                    format("주문하신 상품 수량만큼 상품을 주문할 수 없습니다. 상품 ID: %s, 주문한 상품 수량: %d, 남은 상품 수량: %d",
-                    orderedProductId, orderedQuantity, product.getQuantity())
-            );
+        ResponseEntity<ProductOrderResponseDto> orderedProductResponseEntity = productServiceClient.orderProduct(new ProductOrderRequestDto(orderedProductId, orderedQuantity));
+        if (orderedProductResponseEntity.getStatusCode().is4xxClientError()) {
+            throw new IllegalArgumentException(format("잘못된 상품 주문 요청입니다.(Status code: %s) > 상품 ID: %d",
+                    orderedProductResponseEntity.getStatusCode(), orderedProductId));
+        } else if (orderedProductResponseEntity.getStatusCode().is5xxServerError()) {
+            throw new RuntimeException(format("상품 주문에 실패하였습니다.(Status code: %s) > 상품 ID: %d",
+                    orderedProductResponseEntity.getStatusCode(), orderedProductId));
         }
-        product.updateQuantity(-orderedQuantity);
+        ProductOrderResponseDto orderedProduct = orderedProductResponseEntity.getBody();
 
-        final BigDecimal productPrice = product.getPrice();
+        final BigDecimal productPrice = orderedProduct.getPrice();
         final BigDecimal orderedTotalPrice = productPrice.multiply(BigDecimal.valueOf(orderedQuantity));
         Orders orders = new Orders(orderedTotalPrice);
         ordersRepository.save(orders);
 
-        ProductOrders productOrders = new ProductOrders(product, orders, orderedQuantity, productPrice);
+        ProductOrders productOrders = new ProductOrders(orderedProduct, orders, orderedQuantity, productPrice);
         productOrdersRepository.save(productOrders);
 
-        UserOrders userOrders = new UserOrders(user, orders);
+        UserOrders userOrders = new UserOrders(userDetail.getId(), orders);
         userOrdersRepository.save(userOrders);
 
-        return new OrdersCreateResponseVo(orders, productOrders, userOrders);
+        return new OrdersCreateResponseVo(orders, productOrders, userDetail, orderedProduct);
     }
 
 }

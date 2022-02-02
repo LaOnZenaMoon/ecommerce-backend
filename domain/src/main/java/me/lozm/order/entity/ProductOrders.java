@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.lozm.common.entity.BaseEntity;
+import me.lozm.product.dto.ProductOrderResponseDto;
 import me.lozm.product.entity.Product;
 
 import javax.persistence.*;
@@ -27,6 +28,9 @@ public class ProductOrders extends BaseEntity {
     @JoinColumn(name = "PRODUCT_ID")
     private Product product;
 
+    @Column(name = "PRODUCT_ID", insertable = false, updatable = false)
+    private Long productId;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ORDER_ID")
     private Orders orders;
@@ -38,8 +42,8 @@ public class ProductOrders extends BaseEntity {
     private BigDecimal price;
 
 
-    public ProductOrders(Product product, Orders orders, Integer quantity, BigDecimal price) {
-        this.product = product;
+    public ProductOrders(ProductOrderResponseDto product, Orders orders, Integer quantity, BigDecimal price) {
+        this.productId = product.getId();
         this.orders = orders;
         this.quantity = quantity;
         this.price = price;

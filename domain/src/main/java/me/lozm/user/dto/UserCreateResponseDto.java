@@ -6,7 +6,7 @@ import me.lozm.common.dto.BaseDto;
 @Getter
 public class UserCreateResponseDto extends BaseDto {
 
-    private String id;
+    private Long id;
     private String email;
     private String name;
 
