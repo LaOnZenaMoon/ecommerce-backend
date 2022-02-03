@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.lozm.common.entity.BaseEntity;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.util.Assert;
 
 import javax.persistence.*;
@@ -17,12 +18,16 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "PRODUCT")
+@DynamicUpdate
 public class Product extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PRODUCT_ID")
     private Long id;
+
+    @Version
+    private Integer version;
 
     @Column(name = "NAME", nullable = false)
     private String name;
