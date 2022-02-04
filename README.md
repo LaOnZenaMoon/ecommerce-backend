@@ -1,6 +1,6 @@
 ## ecommerce-backend
 * Deal with backend server applications related to e-commerce
-* Will be used with other projects[spring-cloud-infra-v2]
+* Will be used with other projects[spring-cloud-infra-v2, spring-cloud-config-server]
 
 ## Project structure
 
