@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'java-library'
     id 'org.springframework.boot' version '2.5.8'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
@@ -17,6 +18,7 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java-library'
 
     group 'me.lozm'
     version '1.0.0'
