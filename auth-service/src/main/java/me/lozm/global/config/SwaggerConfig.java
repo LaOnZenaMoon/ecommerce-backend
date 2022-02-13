@@ -24,8 +24,8 @@ public class SwaggerConfig {
     public GroupedOpenApi apiV1() {
         return GroupedOpenApi.builder()
                 .group("api-version-1")
-                .pathsToMatch("/v1/**")
-                .pathsToExclude("/v1/test/**")
+                .pathsToMatch("/**")
+                .pathsToExclude("/test/**")
                 .addOpenApiCustomiser(buildSecurityOpenApi())
                 .build();
     }
