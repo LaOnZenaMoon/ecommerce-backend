@@ -33,7 +33,7 @@ dependencies {
     implementation 'mysql:mysql-connector-java'
 
     // Spring Kafka
-    implementation 'org.springframework.kafka:spring-kafka'
+//    implementation 'org.springframework.kafka:spring-kafka'
 
     // Swagger
     implementation 'org.springdoc:springdoc-openapi-ui:1.5.13'
