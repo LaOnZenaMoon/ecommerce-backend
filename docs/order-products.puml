@@ -1,0 +1,39 @@
+@startuml
+
+autonumber
+
+actor client
+participant order_service
+participant auth_service
+participant product_service
+
+
+client->auth_service: Sign in
+note right: Sign in API
+activate auth_service
+auth_service->auth_service: Create JWT
+auth_service-->client: JWT
+deactivate auth_service
+
+client->order_service: Order the products
+note right: Create the order API
+activate order_service
+
+order_service->auth_service: Get the user details, using JWT
+note right: Get the user details API
+activate auth_service
+auth_service-->order_service: Return the user details
+deactivate auth_service
+
+order_service->product_service: Check the product and update the quantity
+note right: Check & update the product API
+activate product_service
+product_service-->order_service: Return the product details
+deactivate product_service
+
+order_service->order_service: Create the data about the order
+
+order_service-->client: Complete the order
+deactivate order_service
+
+@enduml
