@@ -24,6 +24,10 @@
 ### payment-service 
 * A service for paying for products
 
+### Diagram
+* Order the products
+  ![class-diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/laonzenamoon/ecommerce-backend/master/docs/order-products.puml)
+
 ## Skills
 * Java 11
 * Spring Boot 2.5.x
@@ -45,3 +49,4 @@
   * docker-compose
 * MySQL
 * Swagger
+* PlantUML
