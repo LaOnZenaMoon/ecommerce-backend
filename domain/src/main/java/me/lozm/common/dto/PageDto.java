@@ -1,17 +1,21 @@
 package me.lozm.common.dto;
 
-import lombok.Setter;
 import org.springframework.data.domain.PageRequest;
 
 import static java.lang.String.format;
 import static me.lozm.code.CommonCode.MAX_PAGE_SIZE;
 
-@Setter
 public class PageDto {
 
     private int pageNumber;
     private int pageSize;
 
+
+    public PageDto(int pageNumber, int pageSize) {
+        this.pageNumber = pageNumber;
+        this.pageSize = pageSize;
+    }
+    
 
     public int getPageNumber() {
         return pageNumber;

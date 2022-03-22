@@ -16,9 +16,9 @@ ext {
 
 subprojects {
     apply plugin: 'java'
+    apply plugin: 'java-library'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
-    apply plugin: 'java-library'
 
     group 'me.lozm'
     version '1.0.0'
@@ -41,6 +41,8 @@ subprojects {
     dependencies {
         implementation 'org.apache.commons:commons-lang3:3.12.0'
         implementation 'org.modelmapper:modelmapper:2.4.5'
+        implementation 'org.mapstruct:mapstruct:1.4.2.Final'
+        annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
 
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.lozm.api.service.UserService;
 import me.lozm.common.dto.PageDto;
 import me.lozm.common.dto.SearchDto;
+import me.lozm.common.mapper.CommonMapper;
 import me.lozm.common.vo.PageVo;
 import me.lozm.common.vo.SearchVo;
 import me.lozm.user.dto.UserCreateRequestDto;
@@ -29,11 +30,12 @@ import static me.lozm.utils.MapperUtils.mapStrictly;
 public class UserController {
 
     private final UserService userService;
+    private final CommonMapper commonMapper;
 
 
     @GetMapping
     public ResponseEntity<Page<UserInfoResponseDto>> getUserList(PageDto pageDto, SearchDto searchDto) {
-        final PageVo pageVo = mapStrictly(pageDto, PageVo.class);
+        final PageVo pageVo = commonMapper.map(pageDto);
         final SearchVo searchVo = mapStrictly(searchDto, SearchVo.class);
 
         Page<UserInfoVo> usersPage = userService.getUserList(pageVo, searchVo);

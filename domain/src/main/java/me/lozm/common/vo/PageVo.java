@@ -11,6 +11,12 @@ public class PageVo {
     private int pageSize;
 
 
+    public PageVo(int pageNumber, int pageSize) {
+        this.pageNumber = pageNumber;
+        this.pageSize = pageSize;
+    }
+
+
     public int getPageNumber() {
         return pageNumber;
     }
