@@ -1,4 +1,4 @@
-package me.lozm.global.config;
+package me.lozm.global.config.queryDsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
