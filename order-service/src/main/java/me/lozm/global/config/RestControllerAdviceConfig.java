@@ -37,6 +37,7 @@ public class RestControllerAdviceConfig {
     @ExceptionHandler(Exception.class)
     public String handleException(Exception e) {
         log.error(e.getMessage());
+        e.printStackTrace();
         return e.getMessage();
     }
 

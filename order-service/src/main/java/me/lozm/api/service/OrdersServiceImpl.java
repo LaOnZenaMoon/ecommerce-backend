@@ -1,5 +1,8 @@
 package me.lozm.api.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import feign.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.lozm.api.client.AuthServiceClient;
@@ -20,6 +23,7 @@ import me.lozm.product.dto.ProductOrderResponseDto;
 import me.lozm.user.dto.UserInfoResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +43,7 @@ public class OrdersServiceImpl implements OrdersService {
     private final UserOrdersRepository userOrdersRepository;
     private final AuthServiceClient authServiceClient;
     private final ProductServiceClient productServiceClient;
+    private final ObjectMapper objectMapper;
 
 
     @Override
@@ -65,15 +70,24 @@ public class OrdersServiceImpl implements OrdersService {
         //TODO order-service & product-service 모듈 조회 및 업데이트 기능에 Kafka 적용
         // 1. 상품 조회
         // 2. 상품 업데이트
-        ResponseEntity<ProductOrderResponseDto> orderedProductResponseEntity = productServiceClient.orderProduct(new ProductOrderRequestDto(orderedProductId, orderedQuantity));
-        if (orderedProductResponseEntity.getStatusCode().is4xxClientError()) {
+        Response response = productServiceClient.orderProduct(new ProductOrderRequestDto(orderedProductId, orderedQuantity));
+        final HttpStatus.Series httpStatusSeries = HttpStatus.Series.valueOf(response.status());
+        if (httpStatusSeries == HttpStatus.Series.CLIENT_ERROR) {
             throw new IllegalArgumentException(format("잘못된 상품 주문 요청입니다.(Status code: %s) > 상품 ID: %d",
-                    orderedProductResponseEntity.getStatusCode(), orderedProductId));
-        } else if (orderedProductResponseEntity.getStatusCode().is5xxServerError()) {
+                    response.status(), orderedProductId));
+        } else if (httpStatusSeries == HttpStatus.Series.SERVER_ERROR) {
             throw new RuntimeException(format("상품 주문에 실패하였습니다.(Status code: %s) > 상품 ID: %d",
-                    orderedProductResponseEntity.getStatusCode(), orderedProductId));
+                    response.status(), orderedProductId));
         }
-        ProductOrderResponseDto orderedProduct = orderedProductResponseEntity.getBody();
+
+        ProductOrderResponseDto orderedProduct = null;
+        try {
+            orderedProduct = objectMapper.readValue(response.body().toString(), ProductOrderResponseDto.class);
+        } catch (JsonProcessingException e) {
+            log.error(e.getMessage());
+            throw new RuntimeException(format("상품 주문에 실패하였습니다.(reason: %s) > 상품 ID: %d",
+                    e.getMessage(), orderedProductId));
+        }
 
         final BigDecimal productPrice = orderedProduct.getPrice();
         final BigDecimal orderedTotalPrice = productPrice.multiply(BigDecimal.valueOf(orderedQuantity));

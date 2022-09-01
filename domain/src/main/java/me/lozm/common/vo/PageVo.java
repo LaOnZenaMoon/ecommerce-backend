@@ -1,10 +1,12 @@
 package me.lozm.common.vo;
 
+import lombok.NoArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 
 import static java.lang.String.format;
 import static me.lozm.code.CommonCode.MAX_PAGE_SIZE;
 
+@NoArgsConstructor
 public class PageVo {
 
     private int pageNumber;
